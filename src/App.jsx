@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { CATS, FILTERS } from './data.js'
-import { useCars } from './store.js'
+import { useCars, useCatImgs } from './store.js'
 import Admin from './Admin.jsx'
 
 function Car({ color, glow = '#cfe0ff' }) {
@@ -57,6 +57,7 @@ function VehicleCard({ v }) {
 }
 
 function Home() {
+  const catImgs = useCatImgs()
   return (
     <>
       <Nav active={0} />
@@ -90,7 +91,7 @@ function Home() {
         <div className="cats">
           {CATS.map((c) => (
             <a key={c[0]} className="cat" href="#/vehicules">
-              <Car color={c[2]} /><b>{c[0]}</b><small>À partir de {c[1]}€/jour</small>
+              {catImgs[c[0]] ? <img src={catImgs[c[0]]} alt={c[0]} /> : <Car color={c[2]} />}<b>{c[0]}</b><small>À partir de {c[1]}€/jour</small>
             </a>
           ))}
         </div>

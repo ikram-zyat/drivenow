@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { useCars, setCars, resetCars } from './store.js'
-import { FILTERS } from './data.js'
+import { useCars, setCars, resetCars, useCatImgs, setCatImg } from './store.js'
+import { FILTERS, CATS } from './data.js'
 
 // Identifiants de démonstration (non sécurisés : tout est côté navigateur)
 const ADMIN = { email: 'admin@drivenow.ma', pass: 'admin123' }
@@ -27,6 +27,7 @@ function compress(file) {
 
 export default function Admin() {
   const cars = useCars()
+  const catImgs = useCatImgs()
   const [auth, setAuth] = useState(sessionStorage.getItem('dn_admin') === '1')
   const [login, setLogin] = useState({ email: '', pass: '' })
   const [err, setErr] = useState('')
@@ -122,6 +123,26 @@ export default function Admin() {
               <button className="btn o" onClick={() => remove(c)}>Supprimer</button>
             </div>
           ))}
+        </div>
+        <div className="box full">
+          <h4>Photos des catégories (page d’accueil)</h4>
+          <div className="catg">
+            {CATS.map((c) => (
+              <div className="catadm" key={c[0]}>
+                {catImgs[c[0]] ? <img src={catImgs[c[0]]} alt={c[0]} /> : <span className="nop">Silhouette</span>}
+                <b>{c[0]}</b>
+                <label className="btn o" style={{ textAlign: 'center' }}>
+                  Choisir une photo
+                  <input type="file" accept="image/*" hidden onChange={async (e) => {
+                    const file = e.target.files[0]
+                    if (file) setCatImg(c[0], await compress(file))
+                    e.target.value = ''
+                  }} />
+                </label>
+                {catImgs[c[0]] && <button className="btn o" onClick={() => setCatImg(c[0], null)}>Supprimer</button>}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </>
